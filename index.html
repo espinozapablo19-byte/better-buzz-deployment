@@ -17,10 +17,15 @@ header{background:var(--black);color:#fff;padding:15px 22px;position:sticky;top:
 main{width:min(1250px,100%);margin:auto;padding:22px}
 .card{background:#fff;border-radius:22px;padding:22px;box-shadow:0 8px 25px rgba(0,0,0,.08)}
 h1{margin:0 0 6px;font-size:34px}.kicker{font-size:17px;font-weight:800;margin-bottom:18px}
+.day-wrap{margin:4px 0 22px}.day-label{font-size:12px;font-weight:900;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.day-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.day-btn{border:0;border-radius:13px;background:#e7e7e5;padding:12px 5px;font-size:14px;font-weight:900;cursor:pointer;min-width:0}
+.day-btn.active{background:var(--yellow)}
+.day-status{margin-top:8px;font-size:13px;color:#666}
 .play-count{display:flex;gap:10px;margin:12px 0 22px}.play-count button,.staff-btn{border:0;border-radius:13px;background:#e7e7e5;font-weight:900;cursor:pointer}
 .play-count button{padding:12px 18px;font-size:17px}.play-count button.active,.staff-btn.active{background:var(--yellow)}
 .plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.plan-card{border:2px solid #ececea;border-radius:18px;padding:16px;background:#fafafa}
+.plan-card{border:2px solid #ececea;border-radius:18px;padding:16px;background:#fafafa;min-width:0}
 .play-label{width:100%;border:0;border-bottom:2px solid #ddd;background:transparent;font-size:20px;font-weight:900;padding:6px 4px 10px;outline:none}
 .play-label:focus{border-color:var(--yellow)}
 .staff-label{font-size:12px;font-weight:900;color:#666;margin:14px 0 8px;text-transform:uppercase;letter-spacing:.4px}
@@ -31,36 +36,43 @@ h1{margin:0 0 6px;font-size:34px}.kicker{font-size:17px;font-weight:800;margin-b
 .name-input{width:100%;margin-top:6px;border:2px solid transparent;background:#fff;border-radius:9px;padding:9px 10px;font-size:15px;outline:none}.name-input:focus{border-color:var(--yellow)}
 .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.primary,.secondary-btn{border:0;border-radius:14px;padding:14px 18px;font-size:17px;font-weight:900;cursor:pointer}.primary{background:var(--yellow);color:#111;flex:1}.secondary-btn{background:#dededb}
 .hidden{display:none!important}
-.live-top{display:flex;justify-content:space-between;align-items:center;gap:16px}.live-label{font-size:14px;font-weight:900;color:#666}.live-name{font-size:34px;font-weight:900}.live-count{font-size:56px;font-weight:900;color:var(--yellow)}
+.live-top{display:flex;justify-content:space-between;align-items:center;gap:16px}.live-label{font-size:14px;font-weight:900;color:#666}.live-day{font-size:15px;font-weight:900;color:#666;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}.live-name{font-size:34px;font-weight:900}.live-count{font-size:56px;font-weight:900;color:var(--yellow)}
 .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.timeline button{border:0;border-radius:14px;padding:11px;background:#e8e8e6;font-weight:900;cursor:pointer}.timeline button.active{background:var(--yellow)}.timeline button.future{opacity:.7}
 .live-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.live-role{background:#f0f0ee;border-left:11px solid var(--green);border-radius:14px;padding:14px}.live-role.is-planted{border-left-color:var(--orange)}.live-role .r{font-size:18px;font-weight:900}.live-role .s{font-size:13px;color:#666;margin-top:3px}.live-role .who{font-size:25px;font-weight:900;margin-top:8px}
 .next-strip{margin-top:16px;border-radius:14px;background:#202020;color:#fff;padding:13px 15px;display:flex;justify-content:space-between;gap:10px;align-items:center}.next-strip b{color:var(--yellow)}
 .notice{margin-top:14px;color:#666;font-size:13px}
-@media(max-width:950px){.plan-grid{grid-template-columns:1fr}.live-grid{grid-template-columns:1fr}}
-@media(max-width:600px){main{padding:12px}.card{padding:16px;border-radius:16px}h1{font-size:28px}.timeline{grid-template-columns:1fr}.live-top{align-items:flex-start}.live-name{font-size:28px}}
+@media(max-width:950px){.plan-grid{grid-template-columns:1fr}.live-grid{grid-template-columns:1fr}.day-tabs{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){main{padding:12px}.card{padding:16px;border-radius:16px}h1{font-size:28px}.timeline{grid-template-columns:1fr}.live-top{align-items:flex-start}.live-name{font-size:28px}.day-tabs{grid-template-columns:repeat(4,1fr)}.day-btn{font-size:13px;padding:11px 4px}}
 </style>
 </head>
 <body>
-<header><div class="brand">Peak Deployment Planner</div><div class="sub">Build the full flow: pre-peak → peak → transition out</div></header>
+<header><div class="brand">Peak Deployment Planner</div><div class="sub">Plan Monday–Sunday • pre-peak → peak → transition out</div></header>
 <main>
 <section id="setup" class="card">
-  <h1>Build Today’s Plays</h1>
-  <div class="kicker">Assign the team ahead of time, then move through each play live.</div>
+  <h1>Build This Week’s Plays</h1>
+  <div class="kicker">Choose a day, build 2–3 plays, and assign the team ahead of time.</div>
+
+  <div class="day-wrap">
+    <div class="day-label">Day of week</div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div class="day-status" id="dayStatus"></div>
+  </div>
+
   <div class="play-count">
     <button id="twoBtn">2 Plays</button>
     <button id="threeBtn">3 Plays</button>
   </div>
   <div id="planGrid" class="plan-grid"></div>
   <div class="actions">
-    <button class="secondary-btn" id="clearBtn">Clear All Names</button>
+    <button class="secondary-btn" id="clearBtn">Clear This Day</button>
     <button class="primary" id="startBtn">Start Live Deployment</button>
   </div>
-  <div class="notice">Everything is saved on this device/browser.</div>
+  <div class="notice">Each day is saved separately on this device/browser.</div>
 </section>
 
 <section id="live" class="card hidden">
   <div class="live-top">
-    <div><div class="live-label">CURRENT PLAY</div><div class="live-name" id="liveName"></div></div>
+    <div><div class="live-day" id="liveDay"></div><div class="live-label">CURRENT PLAY</div><div class="live-name" id="liveName"></div></div>
     <div class="live-count" id="liveCount"></div>
   </div>
   <div class="timeline" id="timeline"></div>
@@ -77,27 +89,51 @@ h1{margin:0 0 6px;font-size:34px}.kicker{font-size:17px;font-weight:800;margin-b
 <script>
 const deployment={"4":[{"role":"Drive Thru Window","secondary":"Café POS","type":"non-planted"},{"role":"Bar","secondary":"DT POS","type":"non-planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Café POS & Flex","type":"non-planted"}],"5":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Bar","secondary":"DT POS","type":"non-planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Café POS / Bottleneck","type":"non-planted"}],"6":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Café Bar","secondary":"DT POS","type":"non-planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Café POS / Bottleneck","type":"non-planted"},{"role":"DT Bar","secondary":"Café POS / Bottleneck","type":"non-planted"}],"7":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Café Bar","secondary":"","type":"planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Bottleneck","type":"non-planted"},{"role":"DT Bar","secondary":"","type":"planted"},{"role":"Café POS","secondary":"DT POS","type":"non-planted"}],"8":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Café Bar","secondary":"","type":"planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Bottleneck","type":"non-planted"},{"role":"DT Bar","secondary":"","type":"planted"},{"role":"Café POS","secondary":"DT POS","type":"non-planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"}],"9":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Café Bar","secondary":"","type":"planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Bottleneck","type":"non-planted"},{"role":"DT Bar","secondary":"","type":"planted"},{"role":"Café POS","secondary":"DT POS","type":"non-planted"},{"role":"2nd BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"2nd Expo","secondary":"Bar","type":"non-planted"}],"10":[{"role":"Drive Thru Window","secondary":"","type":"planted"},{"role":"Café Bar","secondary":"","type":"planted"},{"role":"BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"Drive Thru Expo","secondary":"Bar","type":"non-planted"},{"role":"Peak Captain (Flex)","secondary":"Bottleneck","type":"non-planted"},{"role":"DT Bar","secondary":"","type":"planted"},{"role":"Café POS","secondary":"DT POS","type":"non-planted"},{"role":"2nd BOH Food","secondary":"Hot & Cold","type":"non-planted"},{"role":"2nd Expo","secondary":"Bar","type":"non-planted"},{"role":"2nd DT Bar","secondary":"BOH Food","type":"non-planted"}]};
 
-const defaults=[
+const dayNames=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const defaults=()=>[
   {label:"Pre-Peak",people:4,names:{}},
   {label:"Peak",people:9,names:{}},
   {label:"Transition Out",people:5,names:{}}
 ];
-let playCount=Number(localStorage.getItem("bb_playCount")||3);
-let plays=JSON.parse(localStorage.getItem("bb_plays")||"null")||defaults;
-while(plays.length<3) plays.push(JSON.parse(JSON.stringify(defaults[plays.length])));
+function newDay(){return {playCount:3,plays:defaults()}}
+function loadWeek(){
+  const saved=JSON.parse(localStorage.getItem("bb_week")||"null");
+  const week={};
+  dayNames.forEach(d=>week[d]=saved&&saved[d]?saved[d]:newDay());
+  return week;
+}
+function todayName(){
+  const jsDay=new Date().getDay();
+  return ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][jsDay];
+}
+let week=loadWeek();
+let selectedDay=localStorage.getItem("bb_selectedDay")||todayName();
+if(!dayNames.includes(selectedDay)) selectedDay="Monday";
 let currentPlay=0;
 
-function save(){localStorage.setItem("bb_playCount",playCount);localStorage.setItem("bb_plays",JSON.stringify(plays))}
+function dayData(){return week[selectedDay]}
+function save(){localStorage.setItem("bb_week",JSON.stringify(week));localStorage.setItem("bb_selectedDay",selectedDay)}
 function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function renderPlayCount(){
-  twoBtn.classList.toggle("active",playCount===2);
-  threeBtn.classList.toggle("active",playCount===3);
-}
 function roleKey(idx,item){return idx+"-"+item.role}
+function renderDays(){
+  dayTabs.innerHTML="";
+  dayNames.forEach(day=>{
+    const b=document.createElement("button");b.className="day-btn"+(day===selectedDay?" active":"");b.textContent=day.slice(0,3);
+    b.title=day;
+    b.onclick=()=>{selectedDay=day;save();renderSetup()};
+    dayTabs.appendChild(b);
+  });
+  dayStatus.textContent=selectedDay+" plan • "+dayData().playCount+" plays";
+}
+function renderPlayCount(){
+  twoBtn.classList.toggle("active",dayData().playCount===2);
+  threeBtn.classList.toggle("active",dayData().playCount===3);
+}
 function renderSetup(){
-  renderPlayCount();
+  renderDays();renderPlayCount();
+  const data=dayData();
   const grid=document.getElementById("planGrid");grid.innerHTML="";
-  plays.slice(0,playCount).forEach((play,pIdx)=>{
+  data.plays.slice(0,data.playCount).forEach((play,pIdx)=>{
     const card=document.createElement("div");card.className="plan-card";
     const staffButtons=[4,5,6,7,8,9,10].map(n=>`<button class="staff-btn ${n===play.people?"active":""}" data-n="${n}">${n}</button>`).join("");
     card.innerHTML=`
@@ -123,17 +159,16 @@ function renderSetup(){
   });
 }
 function showLive(startIndex=0){
-  save();currentPlay=Math.min(startIndex,playCount-1);
-  document.getElementById("setup").classList.add("hidden");
-  document.getElementById("live").classList.remove("hidden");
-  renderLive();
+  save();currentPlay=Math.min(startIndex,dayData().playCount-1);
+  setup.classList.add("hidden");live.classList.remove("hidden");renderLive();
 }
 function renderLive(){
-  const play=plays[currentPlay];
+  const data=dayData(),play=data.plays[currentPlay];
+  liveDay.textContent=selectedDay;
   liveName.textContent=play.label||`Play ${currentPlay+1}`;
   liveCount.textContent=play.people;
   timeline.innerHTML="";
-  plays.slice(0,playCount).forEach((p,idx)=>{
+  data.plays.slice(0,data.playCount).forEach((p,idx)=>{
     const b=document.createElement("button");
     b.textContent=(p.label||`Play ${idx+1}`)+" • "+p.people;
     b.className=idx===currentPlay?"active":idx>currentPlay?"future":"";
@@ -147,20 +182,20 @@ function renderLive(){
     div.innerHTML=`<div class="r">${idx+1}. ${item.role}</div>${item.secondary?`<div class="s">→ ${item.secondary}</div>`:""}<div class="who">${escapeHtml(play.names[key]||"— Open —")}</div>`;
     liveGrid.appendChild(div);
   });
-  const next=currentPlay<playCount-1?plays[currentPlay+1]:null;
+  const next=currentPlay<data.playCount-1?data.plays[currentPlay+1]:null;
   nextStrip.innerHTML=next?`<span>UP NEXT</span><span><b>${escapeHtml(next.label||`Play ${currentPlay+2}`)}</b> • ${next.people} people</span>`:`<span>FINAL PLAY</span><span><b>Deployment complete</b></span>`;
   prevBtn.disabled=currentPlay===0;prevBtn.style.opacity=currentPlay===0?".45":"1";
-  nextBtn.disabled=currentPlay===playCount-1;nextBtn.style.opacity=currentPlay===playCount-1?".45":"1";
+  nextBtn.disabled=currentPlay===data.playCount-1;nextBtn.style.opacity=currentPlay===data.playCount-1?".45":"1";
 }
-function showSetup(){document.getElementById("live").classList.add("hidden");document.getElementById("setup").classList.remove("hidden");renderSetup()}
+function showSetup(){live.classList.add("hidden");setup.classList.remove("hidden");renderSetup()}
 
-twoBtn.onclick=()=>{playCount=2;save();renderSetup()};
-threeBtn.onclick=()=>{playCount=3;save();renderSetup()};
+twoBtn.onclick=()=>{dayData().playCount=2;save();renderSetup()};
+threeBtn.onclick=()=>{dayData().playCount=3;save();renderSetup()};
 startBtn.onclick=()=>showLive(0);
 editBtn.onclick=showSetup;
 prevBtn.onclick=()=>{if(currentPlay>0){currentPlay--;renderLive()}};
-nextBtn.onclick=()=>{if(currentPlay<playCount-1){currentPlay++;renderLive()}};
-clearBtn.onclick=()=>{plays.forEach(p=>p.names={});save();renderSetup()};
+nextBtn.onclick=()=>{if(currentPlay<dayData().playCount-1){currentPlay++;renderLive()}};
+clearBtn.onclick=()=>{week[selectedDay]=newDay();save();renderSetup()};
 
 renderSetup();
 </script>
