@@ -1,0 +1,8 @@
+{
+  "name": "Better Buzz Deployment",
+  "short_name": "Deployment",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#202020",
+  "theme_color": "#202020"
+}
